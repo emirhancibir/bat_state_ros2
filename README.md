@@ -23,7 +23,7 @@ This ROS 2 package simulates a battery state publisher node that models the beha
 - Publish Charging Status:
   Open a new terminal and publish charging status (true or false) to the topic:
   ```
-  ros2 topic pub /battery_ns/is_charging_topic std_msgs/msg/Bool "data: false"
+  ros2 topic pub --once  /battery_ns/is_charging_topic std_msgs/msg/Bool "data: false"
   ```
   Change false to true to simulate charging.
 
@@ -48,7 +48,7 @@ The power_msg/msg/BatteryState.msg file defines the message structure used for p
 
 ## Behavior
 - When charging is true and the current capacity is less than the total capacity, the battery is charged. The charging process follows the specified rising time (x) and rising coefficient (y).
-- When discharging is true and the current capacity is greater than 1.0, the battery is discharged. The discharging process follows the specified falling time (z) and falling coefficient (w).
+- When discharging is true and the current capacity is greater than 30.0, the battery is discharged. The discharging process follows the specified falling time (z) and falling coefficient (w).
 - The battery state is published periodically, and additional messages are published when the battery is fully charged or discharged.
 Feel free to experiment with different parameter values to observe how the battery state changes based on the charging and discharging coefficients.
   
