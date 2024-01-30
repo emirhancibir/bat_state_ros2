@@ -2,7 +2,6 @@
 #include <functional>
 #include <memory>
 
-
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/bool.hpp"
 #include "power_msg/msg/battery_state.hpp"
@@ -12,7 +11,7 @@ using namespace std::chrono_literals;
 class PublisherNode : public rclcpp::Node
 {
     public:
-        PublisherNode() : Node("bat_state_publisher") , current_capacity_(10.0)
+        PublisherNode() : Node("bat_state_publisher") , current_capacity_(30.0)
         {
             declare_parameter("x", 0); // default param is 0
             declare_parameter("y", 0.0);
@@ -26,7 +25,7 @@ class PublisherNode : public rclcpp::Node
             std::cout<< "Battery Node Started !! "<< std::endl;
             
             publisher_ = this->create_publisher<power_msg::msg::BatteryState>("bat_topic", 10); 
-            timer_ = this->create_wall_timer(500ms, std::bind(&PublisherNode::callback, this));
+            timer_ = this->create_wall_timer(100ms, std::bind(&PublisherNode::callback, this));
 
             charge_subscriber_ = this->create_subscription<std_msgs::msg::Bool>("is_charging_topic", 10,std::bind(&PublisherNode::chargeCallback, this, std::placeholders::_1));
         }
@@ -54,7 +53,7 @@ class PublisherNode : public rclcpp::Node
 
                 std::cout << "Current capacity : "<< message.current_capacity << std::endl;
 
-                if (current_capacity_ >= message.total_capacity * 0.98)
+                if (current_capacity_ >= message.total_capacity)
                 {
                     // full charged
                     std::cout << "Full charged" << std::endl;
@@ -71,7 +70,7 @@ class PublisherNode : public rclcpp::Node
                 rclcpp::sleep_for(std::chrono::milliseconds(x_time*1000));
             }
 
-            if (message.is_charging == false && current_capacity_ > 1.0)
+            if (message.is_charging == false && current_capacity_ >= 30.0)
             {
                 // DISCHARGE
                 current_capacity_ -= w;

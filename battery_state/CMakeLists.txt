@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(power_msg REQUIRED)
+find_package(message_filters REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -24,7 +25,7 @@ if(BUILD_TESTING)
 endif()
 
 add_executable(bat_state src/battery_state.cpp)
-ament_target_dependencies(bat_state rclcpp power_msg std_msgs)
+ament_target_dependencies(bat_state rclcpp power_msg std_msgs message_filters)
 
 install(TARGETS 
   bat_state
